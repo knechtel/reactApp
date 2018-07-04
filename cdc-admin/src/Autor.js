@@ -3,7 +3,7 @@ import $ from 'jquery';
 import InputCustomizado from './componentes/InputCustomizado';
 
 
-export class FormularioAutor extends Component{
+ class FormularioAutor extends Component{
 
   constructor() {
     super();
@@ -12,6 +12,7 @@ export class FormularioAutor extends Component{
     this.setNome = this.setNome.bind(this);
     this.setEmail = this.setEmail.bind(this);
     this.setSenha = this.setSenha.bind(this);
+    
   }
 
  setNome(evento){
@@ -34,7 +35,7 @@ enviaForm(evento){
      type:'post',
      data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
      success: function(resposta){
-       this.setState({lista:resposta});        
+     this.props.callbackAtualizaListagem(resposta);      
      }.bind(this),
      error: function(resposta){
        console.log("erro");
@@ -63,12 +64,9 @@ enviaForm(evento){
 
 
 
-export class TabelaAutores extends Component{
+ class TabelaAutores extends Component{
 
-   constructor() {
-      super();
-      this.state = {lista : []};
-    }
+
     render() {
         return(
                 <div>            
@@ -101,10 +99,13 @@ export class TabelaAutores extends Component{
 
 export default class AutorBox extends Component{
   constructor() {
-      super();
-      this.state = {lista : []};
-    }
-
+    super();
+  	this.state = {lista : []};
+  	this.atualizaListagem = this.atualizaListagem.bind(this);
+  }
+  atualizaListagem(novaLista) {
+  	this.setState({lista:novaLista});
+  }
   componentDidMount(){  
       $.ajax({
           url:"http://localhost:8080/api/autores",
